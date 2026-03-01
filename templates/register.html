@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Register – AI Study Buddy{% endblock %}
+
+{% block body %}
+<div class="auth-page">
+  <div class="auth-glow"></div>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">Study<strong>Buddy</strong></span>
+    </div>
+    <h1 class="auth-heading">Create account</h1>
+    <p class="auth-sub">Start your AI-powered learning journey today</p>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/register" class="auth-form">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" placeholder="your_username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password <small>(min 6 chars)</small></label>
+        <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="new-password" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Create Account →</button>
+    </form>
+
+    <p class="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
+  </div>
+</div>
+{% endblock %}

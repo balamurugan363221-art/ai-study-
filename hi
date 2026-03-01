@@ -1,0 +1,8 @@
+# Copy this file to .env and fill in your values
+
+# Flask secret key – use a long random string in production
+SECRET_KEY=your-secret-key-here
+
+# AI provider – add ONE of these (both optional; app works without them)
+OPENROUTER_API_KEY=
+HUGGINGFACE_API_KEY=
