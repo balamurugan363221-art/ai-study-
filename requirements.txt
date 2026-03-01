@@ -1,5 +1,7 @@
-flask>=3.0.0
-werkzeug>=3.0.0
-requests>=2.32.0
-python-dotenv>=1.0.0
-gunicorn>=22.0.0
+Flask==3.0.2
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
+groq==0.4.2
+pypdf==4.0.1
+python-dotenv==1.0.1
+werkzeug==3.0.1
