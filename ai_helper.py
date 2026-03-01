@@ -1,20 +1,23 @@
 """ai_helper.py – External AI handler using Groq"""
+import os
+from dotenv import load_dotenv
 from groq import Groq
 
-# 🚨 HARDCODED API KEY 🚨
-# Paste your real key inside these quotes. Make sure there are NO spaces!
-API_KEY = "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"
+# 1. Load environment variables securely
+load_dotenv(override=True)
 
-# Initialize the Groq client directly with the key
-client = Groq(api_key=API_KEY)
+# 2. Fetch the API key from the environment
+API_KEY = os.environ.get("GROQ_API_KEY")
 
-# The open-source model we are using
-MODEL_NAME = "meta-llama/llama-4-maverick-17b-128e-instruct"
+# 3. Initialize the Groq client only if the key exists
+client = Groq(api_key=API_KEY) if API_KEY else None
+
+MODEL_NAME = "llama3-8b-8192"
 
 def get_ai_response(prompt: str, language: str = "English") -> str:
-    # Quick check to remind you if the key hasn't been pasted yet
-    if not API_KEY or API_KEY == "gsk_paste_your_actual_key_here":
-        return "⚠️ AI Error: Please paste your real Groq API key into ai_helper.py."
+    # Quick check to ensure the key loaded properly
+    if not client:
+        return "⚠️ AI Error: GROQ_API_KEY is missing from the environment variables."
 
     # The System Prompt: Professional tutor that draws diagrams
     dynamic_system_prompt = (
@@ -33,8 +36,8 @@ def get_ai_response(prompt: str, language: str = "English") -> str:
                 {"role": "user", "content": prompt}
             ],
             model=MODEL_NAME,
-            temperature=0.4, # Lowered for more accurate, factual answers
-            max_tokens=2048, # Increased to allow room for larger diagrams
+            temperature=0.4, 
+            max_tokens=2048, 
         )
         return chat_completion.choices[0].message.content.strip()
         
