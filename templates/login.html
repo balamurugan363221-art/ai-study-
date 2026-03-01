@@ -1,34 +1,33 @@
 {% extends "base.html" %}
-{% block title %}Login – AI Study Buddy{% endblock %}
+
+{% block title %}Login - AI Study Buddy{% endblock %}
 
 {% block body %}
-<div class="auth-page">
-  <div class="auth-glow"></div>
-  <div class="auth-card">
-    <div class="auth-logo">
-      <span class="logo-icon">⚡</span>
-      <span class="logo-text">Study<strong>Buddy</strong></span>
+<div style="max-width: 400px; margin: 100px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <div style="text-align: center; margin-bottom: 20px;">
+        <span style="font-size: 3em;">⚡</span>
+        <h2 style="margin: 10px 0 0 0;">Welcome Back</h2>
+        <p style="color: #7f8c8d; margin-top: 5px;">Sign in to continue your studies</p>
     </div>
-    <h1 class="auth-heading">Welcome back</h1>
-    <p class="auth-sub">Sign in to continue your learning journey</p>
 
     {% if error %}
-    <div class="alert alert-error">{{ error }}</div>
+        <div style="background: #fde8e8; color: #e74c3c; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 15px;">
+            <strong>⚠️ {{ error }}</strong>
+        </div>
     {% endif %}
 
-    <form method="POST" action="/login" class="auth-form">
-      <div class="field">
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" placeholder="your_username" autocomplete="username" required />
-      </div>
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
-      </div>
-      <button type="submit" class="btn btn-primary btn-full">Sign In →</button>
+    <form method="POST">
+        <label style="font-weight: bold; color: #2c3e50;">Username</label>
+        <input type="text" name="username" placeholder="Enter your username" required>
+        
+        <label style="font-weight: bold; color: #2c3e50;">Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1em; margin-top: 10px;">Sign In</button>
     </form>
 
-    <p class="auth-switch">Don't have an account? <a href="/register">Register here</a></p>
-  </div>
+    <p style="text-align: center; margin-top: 25px; color: #7f8c8d;">
+        Don't have an account? <a href="/register" style="color: #3498db; text-decoration: none; font-weight: bold;">Register here</a>
+    </p>
 </div>
 {% endblock %}

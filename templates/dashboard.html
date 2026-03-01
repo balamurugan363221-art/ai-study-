@@ -1,132 +1,116 @@
 {% extends "base.html" %}
+
 {% block title %}Dashboard – AI Study Buddy{% endblock %}
 
 {% block body %}
 <div class="app-layout">
-
-  <!-- ── Sidebar ─────────────────────────────── -->
+  
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <span class="logo-icon">⚡</span>
-      <span class="logo-text">Study<strong>Buddy</strong></span>
+        <span style="color: #f1c40f;">⚡</span> Study<strong>Buddy</strong>
     </div>
-
+    
     <nav class="sidebar-nav">
-      <a href="#chat-section"    class="nav-item active" data-target="chat-section">
-        <span class="nav-icon">💬</span> AI Chat
-      </a>
-      <a href="#tracker-section" class="nav-item"        data-target="tracker-section">
-        <span class="nav-icon">📚</span> Study Tracker
-      </a>
-      <a href="#history-section" class="nav-item"        data-target="history-section">
-        <span class="nav-icon">🕐</span> History
-      </a>
+      <a href="#chat-section" class="nav-item active" data-target="chat-section">💬 AI Chat</a>
+      <a href="#tracker-section" class="nav-item" data-target="tracker-section">📚 Study Tracker</a>
+      <a href="#history-section" class="nav-item" data-target="history-section">🕐 Chat History</a>
     </nav>
-
+    
     <div class="sidebar-footer">
-      <button id="theme-toggle" class="btn-ghost" title="Toggle theme">🌓 Theme</button>
-      <a href="/logout" class="btn-ghost danger">⏏ Logout</a>
+        <a href="/logout" class="btn btn-danger" style="display: block; text-align: center;">⏏ Logout</a>
     </div>
   </aside>
 
-  <!-- ── Main ───────────────────────────────── -->
   <main class="main-content">
-
-    <!-- Header -->
-    <header class="dash-header">
+    
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
       <div>
-        <p class="dash-greeting">Good to see you,</p>
-        <h1 class="dash-username">{{ username }} 👋</h1>
+          <p style="margin: 0; color: #7f8c8d; font-size: 1.1em;">Good to see you,</p>
+          <h1 style="margin: 0; color: #2c3e50;">{{ username }} 👋</h1>
       </div>
-      <div class="dash-stats">
-        <div class="stat-pill">
-          <span class="stat-num">{{ total_hours | round(1) }}</span>
-          <span class="stat-label">hrs studied</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-num">{{ chats | length }}</span>
-          <span class="stat-label">questions asked</span>
-        </div>
+      <div style="background: #e8f4f8; padding: 15px 25px; border-radius: 30px; font-size: 1.2em; border: 2px solid #3498db;">
+        <strong style="color: #2980b9;">{{ total_hours | round(1) }}</strong> <span style="color: #7f8c8d;">hrs studied</span>
       </div>
     </header>
 
-    <!-- ── AI Chat ──────────────────────────── -->
-    <section id="chat-section" class="card section-active">
-      <h2 class="card-title">💬 Ask AI Study Buddy</h2>
-      <p class="card-sub">Ask any academic question – maths, science, history, coding…</p>
+    <section id="chat-section" class="card">
+      <h2 style="margin-top: 0; color: #2c3e50;">💬 Ask AI Study Buddy</h2>
+      
+      <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border: 2px dashed #bdc3c7; border-radius: 8px; display: flex; gap: 15px; align-items: center;">
+        <label style="font-weight: bold; color: #34495e; margin: 0; min-width: 120px;">📚 Upload PDF:</label>
+        <input type="file" id="pdf-file" accept="application/pdf" style="margin: 0; flex-grow: 1; padding: 5px;" />
+        <button id="upload-btn" class="btn btn-primary" style="padding: 8px 15px;">Upload</button>
+        <span id="upload-status" style="font-weight: bold; min-width: 100px;"></span>
+      </div>
 
-      <div class="chat-box" id="chat-box">
-        <div class="chat-welcome">
-          <span>👋</span>
-          <p>Hi <strong>{{ username }}</strong>! What would you like to learn today?</p>
+      <div style="margin-bottom: 15px;">
+        <label style="font-weight: bold; color: #34495e;">Reply Language: </label>
+        <select id="lang-select" style="width: 200px; display: inline-block; padding: 8px;">
+          <option value="English">🇬🇧 English</option>
+          <option value="Tamil" selected>🇮🇳 Tamil</option>
+          <option value="Hindi">🇮🇳 Hindi</option>
+        </select>
+      </div>
+
+      <div id="chat-box" style="height: 450px; overflow-y: auto; padding: 20px; border: 1px solid #e0e0e0; margin-bottom: 20px; background: #ffffff; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
+        <div style="text-align: center; color: #95a5a6; margin-top: 20px;">
+            <span style="font-size: 2em;">👋</span>
+            <p>Hi! Upload a study PDF or ask me any academic question.</p>
         </div>
       </div>
 
-      <div class="chat-input-row">
-        <textarea id="question-input" placeholder="e.g. Explain Newton's second law with an example…" rows="2"></textarea>
-        <button id="ask-btn" class="btn btn-primary">Ask ⚡</button>
+      <div style="display: flex; gap: 10px;">
+        <textarea id="question-input" placeholder="e.g. Draw a flowchart of the Waterfall model..." rows="2" style="margin: 0; flex-grow: 1; resize: none; font-size: 1.1em;"></textarea>
+        <button id="ask-btn" class="btn btn-primary" style="padding: 0 30px; font-size: 1.1em;">Ask ⚡</button>
       </div>
-      <p id="chat-error" class="field-error hidden"></p>
     </section>
 
-    <!-- ── Study Tracker ─────────────────────── -->
-    <section id="tracker-section" class="card hidden">
-      <h2 class="card-title">📚 Study Tracker</h2>
-      <p class="card-sub">Log your study sessions to see your progress over time.</p>
+    <section id="tracker-section" class="card" style="display: none;">
+      <h2 style="margin-top: 0; color: #2c3e50;">📚 Study Tracker</h2>
+      <p style="color: #7f8c8d; margin-bottom: 20px;">Log your hours to track your progress.</p>
 
-      <div class="tracker-form">
-        <div class="field">
-          <label>Subject</label>
-          <input id="subject-input" type="text" placeholder="e.g. Biology, Calculus…" />
+      <div style="display: flex; gap: 15px; margin-bottom: 30px; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+        <div style="flex-grow: 1;">
+            <label style="font-weight: bold; font-size: 0.9em; color: #7f8c8d;">Subject</label>
+            <input id="subject-input" type="text" placeholder="e.g., Mobile Computing" style="margin: 0;" />
         </div>
-        <div class="field">
-          <label>Hours spent</label>
-          <input id="hours-input" type="number" placeholder="e.g. 1.5" min="0.1" max="24" step="0.5" />
+        <div style="width: 120px;">
+            <label style="font-weight: bold; font-size: 0.9em; color: #7f8c8d;">Hours</label>
+            <input id="hours-input" type="number" placeholder="1.5" step="0.5" style="margin: 0;" />
         </div>
-        <button id="log-btn" class="btn btn-primary">Log Session</button>
+        <button id="log-btn" class="btn btn-primary" style="align-self: flex-end; padding: 10px 20px;">Log Session</button>
       </div>
-      <p id="tracker-error" class="field-error hidden"></p>
 
-      <div class="progress-grid" id="progress-grid">
+      <div>
+        <h3 style="color: #34495e;">Your Subjects</h3>
         {% if progress %}
-          {% for p in progress %}
-          <div class="progress-card" data-subject="{{ p.subject }}" data-hours="{{ p.total }}">
-            <div class="progress-subject">{{ p.subject }}</div>
-            <div class="progress-hours">{{ p.total | round(1) }} hrs</div>
-            <div class="progress-bar-wrap">
-              <div class="progress-bar" style="width: {{ [p.total * 5, 100] | min }}%"></div>
+            {% for p in progress %}
+            <div style="background: white; padding: 15px; border-left: 5px solid #3498db; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 10px; border-radius: 0 5px 5px 0; display: flex; justify-content: space-between;">
+              <strong style="font-size: 1.1em; color: #2c3e50;">{{ p.subject }}</strong> 
+              <span style="color: #2980b9; font-weight: bold;">{{ p.total | round(1) }} hrs</span>
             </div>
-          </div>
-          {% endfor %}
+            {% endfor %}
         {% else %}
-          <p class="empty-state" id="empty-progress">No sessions logged yet. Add your first one! 🚀</p>
+            <p style="color: #95a5a6;">No sessions logged yet.</p>
         {% endif %}
       </div>
     </section>
 
-    <!-- ── History ──────────────────────────── -->
-    <section id="history-section" class="card hidden">
-      <h2 class="card-title">🕐 Chat History</h2>
-      <p class="card-sub">Your last 20 conversations with AI Study Buddy.</p>
+    <section id="history-section" class="card" style="display: none;">
+      <h2 style="margin-top: 0; color: #2c3e50;">🕐 Chat History</h2>
+      <p style="color: #7f8c8d; margin-bottom: 20px;">Review your last 20 questions.</p>
 
       {% if chats %}
-        <div class="history-list">
           {% for c in chats %}
-          <details class="history-item">
-            <summary class="history-q">
-              <span class="q-icon">Q</span>
-              <span class="q-text">{{ c.question | truncate(120) }}</span>
-              <span class="q-time">{{ c.timestamp }}</span>
-            </summary>
-            <div class="history-a">
-              <span class="a-icon">A</span>
-              <div class="a-text">{{ c.answer }}</div>
+          <details style="margin-bottom: 15px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; cursor: pointer; background: #fdfdfd;">
+            <summary style="font-weight: bold; color: #2c3e50; font-size: 1.1em;">Q: {{ c.question | truncate(80) }}</summary>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; color: #444; line-height: 1.6;">
+                {{ c.answer }}
             </div>
           </details>
           {% endfor %}
-        </div>
       {% else %}
-        <p class="empty-state">No history yet. Ask your first question! ⚡</p>
+          <p style="color: #95a5a6;">No history yet. Start asking questions!</p>
       {% endif %}
     </section>
 
@@ -135,8 +119,140 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  window.mermaid = mermaid; // Make it accessible globally
+</script>
+
 <script>
-  // Pass server data to JS
-  window.INITIAL_PROGRESS = {{ progress | tojson }};
+  document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. Sidebar Tab Navigation
+      const navItems = document.querySelectorAll('.nav-item');
+      const sections = document.querySelectorAll('.card');
+      
+      navItems.forEach(item => {
+          item.addEventListener('click', (e) => {
+              if (item.getAttribute('href') === '/logout') return;
+              e.preventDefault();
+              
+              navItems.forEach(nav => nav.classList.remove('active'));
+              sections.forEach(sec => sec.style.display = 'none');
+              
+              item.classList.add('active');
+              document.getElementById(item.getAttribute('data-target')).style.display = 'block';
+          });
+      });
+
+      // 2. PDF Upload Logic
+      document.getElementById('upload-btn').addEventListener('click', async () => {
+          const file = document.getElementById('pdf-file').files[0];
+          const status = document.getElementById('upload-status');
+          
+          if (!file) { 
+              status.textContent = "⚠️ Select a file."; 
+              status.style.color = "#e74c3c"; 
+              return; 
+          }
+          
+          status.textContent = "⏳ Uploading & Reading..."; 
+          status.style.color = "#f39c12";
+          
+          const formData = new FormData(); 
+          formData.append("file", file);
+          
+          try {
+              const res = await fetch('/api/upload_pdf', { method: 'POST', body: formData });
+              status.textContent = res.ok ? "✅ Saved to DB!" : "⚠️ Upload failed";
+              status.style.color = res.ok ? "#27ae60" : "#e74c3c";
+          } catch (err) {
+              status.textContent = "⚠️ Server Error";
+              status.style.color = "#e74c3c";
+          }
+      });
+
+      // 3. AI Chat Logic (with Mermaid diagram support)
+      document.getElementById('ask-btn').addEventListener('click', async () => {
+          const qInput = document.getElementById('question-input');
+          const chatBox = document.getElementById('chat-box');
+          const question = qInput.value.trim();
+          const lang = document.getElementById('lang-select').value;
+          
+          if (!question) return;
+
+          // Display User Question
+          chatBox.innerHTML += `
+            <div style="text-align: right; margin: 20px 0;">
+              <div style="display: inline-block; background: #3498db; color: white; padding: 12px 18px; border-radius: 18px 18px 0 18px; max-width: 80%; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <strong>You:</strong> <br><span style="line-height: 1.5;">${question}</span>
+              </div>
+            </div>`;
+          
+          qInput.value = '';
+          const loadId = 'load-' + Date.now();
+          chatBox.innerHTML += `<div id="${loadId}" style="margin: 20px 0; color: #7f8c8d;"><em>⚡ Study Buddy is thinking...</em></div>`;
+          chatBox.scrollTop = chatBox.scrollHeight;
+
+          try {
+              const res = await fetch('/api/ask', {
+                  method: 'POST', 
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ question: question, language: lang })
+              });
+              const data = await res.json();
+              document.getElementById(loadId).remove();
+
+              if (data.error) {
+                  chatBox.innerHTML += `<div style="color: #e74c3c; margin: 20px 0;"><strong>⚠️ Error:</strong> ${data.error}</div>`;
+              } else {
+                  // Format Markdown code blocks to render Mermaid diagrams
+                  let htmlAnswer = data.answer.replace(/```mermaid([\s\S]*?)```/g, '<div class="mermaid" style="text-align: center; margin: 20px 0; padding: 15px; background: white; border-radius: 8px;">$1</div>');
+                  // Format Markdown bold text
+                  htmlAnswer = htmlAnswer.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                  
+                  // Display AI Answer
+                  chatBox.innerHTML += `
+                    <div style="text-align: left; margin: 20px 0;">
+                      <div style="display: inline-block; background: #ecf0f1; color: #2c3e50; padding: 15px 20px; border-radius: 18px 18px 18px 0; max-width: 85%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); line-height: 1.6;">
+                        <strong>⚡ AI Study Buddy (${lang}):</strong><br> 
+                        <div style="white-space: pre-wrap; margin-top: 8px;">${htmlAnswer}</div>
+                      </div>
+                    </div>`;
+                  
+                  // Trigger Mermaid to draw any diagrams found in the response
+                  if (window.mermaid) {
+                      window.mermaid.run({ querySelector: '.mermaid' }).catch(e => console.error("Mermaid parsing error", e));
+                  }
+              }
+          } catch (err) {
+              document.getElementById(loadId).remove();
+              chatBox.innerHTML += `<div style="color: #e74c3c; margin: 20px 0;"><strong>⚠️ Error:</strong> Could not reach the server.</div>`;
+          }
+          chatBox.scrollTop = chatBox.scrollHeight;
+      });
+
+      // 4. Study Tracker Logging
+      document.getElementById('log-btn').addEventListener('click', async () => {
+          const sub = document.getElementById('subject-input').value;
+          const hrs = document.getElementById('hours-input').value;
+          
+          if (sub && hrs) {
+              try {
+                  await fetch('/api/study', { 
+                      method: 'POST', 
+                      headers: {'Content-Type': 'application/json'}, 
+                      body: JSON.stringify({subject: sub, hours: hrs}) 
+                  });
+                  // Reload the page to instantly show the updated hours in the sidebar and dashboard
+                  window.location.reload();
+              } catch (err) {
+                  alert("Failed to log session. Please try again.");
+              }
+          } else {
+              alert("Please enter both a subject and the hours studied.");
+          }
+      });
+  });
 </script>
 {% endblock %}
